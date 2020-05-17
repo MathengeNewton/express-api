@@ -1,37 +1,59 @@
-const express = require('express');
+const express = require('express')
 const xlsxFile = require('read-excel-file/node')
-const router = express.Router();
 const app = express();
-const port = 8000;
+const http = require('http').createServer(app)
+const port = process.env.PORT || 3000;
 
-//read incoming file
-let reader = file =>{
+//processes the actual file
+let reader = (file) =>{
     let jsonResponse = {};
-    let rowArray = xlsxFile(file).then((rows)=>{
+    let rowArray = xlsxFile(file).then((rows,columns)=>{
         let rowArray = rows;
-        return rowArray;
+        let columnArray = columns;
+        return `${rowArray} ${columnArray}` ;
     });
+    jsonResponse = {
+        file: rowArray
+    }
     console.log(jsonResponse)
     return jsonResponse
 }
 
+
 // handle incoming rquest and fire out a json response with one key: file
-router.post('/file-converter',(req,res)=>{
-    if(
-        !req.body.file
-    ){
-        res.status(400);
-        res.json({message: "Bad Request"});
+app.post('/express.app/api/',(req,res)=>{
+
+    if( !req.url==='/express.app/api/'||!req.body||
+        !req.method === 'POST')
+    {
+        const badrequestResponse ={
+            status: 400,
+            message: "Bad Request"
+        };
+        console.log(badrequestResponse)
+        res.send(badrequestResponse);
     }else{
-    let incoming = req.body.file
-    let response = reader(incoming)
-    let myres = {
-        "file":response
+        let loadFile = req.body.file
+        // let convertedFile = reader(loadFile)
+        // if(convertedFile){
+        //     let myres = {
+        //         status: 201,
+        //         file: convertedFile
+        //         }
+        //     res.send(myres);
+        // }else{
+        //     const internalError = {
+        //         status: 500,
+        //         message:'internal server error'
+        //     }
+        //     res.send(internalError)
+        // }    
+        console.log(loadFile)
+        res.send({message:'done'})   
     }
-   res.send(myres);
-}
-});
-//listen to port
-app.listen(port,()=>{
-    console.log(`running on port:${port}`);
+})
+
+//open port
+http.listen(port,()=>{
+    console.log(`running on port:${port}...`);
 });

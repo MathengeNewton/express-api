@@ -6,11 +6,14 @@
   "scripts": {
     "start": "node app"
   },
+  "engine":{
+    "node":"12.16.1"
+  },
   "author": "newton",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "read-excel-file": "^4.0.6"
-  },
-  "proxy":"http://localhost:8000"
+  }
+  
 }
