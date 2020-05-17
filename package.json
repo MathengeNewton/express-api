@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app"
   },
-  "engine":{
+  "engines":{
     "node":"12.16.1"
   },
   "author": "newton",
